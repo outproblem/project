@@ -22,7 +22,7 @@ class ValidationError(FitTrackError):
 class UserProfile:
     """Профиль пользователя."""
     
-    пол: str
+    gender: str
     age: int
     height: float
     weight: float
@@ -31,19 +31,19 @@ class UserProfile:
     
     def __post_init__(self) -> None:
         """Валидация данных после инициализации."""
-        self._validate_пол()
+        self._validate_gender()
         self._validate_age()
         self._validate_height()
         self._validate_weight()
         self._validate_goal()
         self._validate_activity_type()
     
-    def _validate_пол(self) -> None:
+    def _validate_gender(self) -> None:
         """Валидирует пол пользователя."""
-        valid_пол = ['мужской', 'женский']
-        if self.пол.lower() not in valid_пол:
+        valid_genders = ['мужской', 'женский']
+        if self.gender.lower() not in valid_genders:
             raise ValidationError(
-                f'Некорректный пол: {self.пол}. Допустимые значения: {valid_пол}'
+                f'Некорректный пол: {self.gender}. Допустимые значения: {valid_genders}'
             )
     
     def _validate_age(self) -> None:

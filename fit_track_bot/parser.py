@@ -33,6 +33,61 @@ class ObjectParser:
     FLOAT_PATTERN = re.compile(r'^-?\d+\.\d+$')
     QUOTED_STRING_PATTERN = re.compile(r'^".*"$')
     
+    # Маппинг русскоязычных ключей на английские
+    RUSSIAN_TO_ENGLISH_MAP = {
+        # UserProfile
+        'пол': 'gender',
+        'гендер': 'gender',
+        'возраст': 'age',
+        'рост': 'height',
+        'вес': 'weight',
+        'цель': 'goal',
+        'тип_активности': 'activity_type',
+        'активность': 'activity_type',
+        'уровень_активности': 'activity_type',
+        
+        # Exercise
+        'название': 'name',
+        'имя': 'name',
+        'подходы': 'sets',
+        'повторения': 'reps_per_set',
+        'повторы': 'reps_per_set',
+        'повторений': 'reps_per_set',
+        'вес': 'weight',
+        'масса': 'weight',
+        'примечания': 'notes',
+        
+        # Workout
+        'дата': 'date',
+        'длительность': 'duration',
+        'продолжительность': 'duration',
+        'упражнения': 'exercises',
+        'комментарии': 'notes',
+        
+        # NutritionGoal
+        'тип_цели': 'goal_type',
+        'калории': 'calories',
+        'белок': 'protein',
+        'протеин': 'protein',
+        'жиры': 'fat',
+        'углеводы': 'carbs',
+        'карбс': 'carbs',
+    }
+    
+    @staticmethod
+    def _translate_key(key: str) -> str:
+        """Переводит русскоязычный ключ на английский.
+        
+        Args:
+            key: Ключ для перевода.
+            
+        Returns:
+            Переведенный ключ или исходный, если перевод не найден.
+        """
+        # Приводим к нижнему регистру и заменяем пробелы на подчеркивания
+        normalized_key = key.lower().replace(' ', '_')
+        return ObjectParser.RUSSIAN_TO_ENGLISH_MAP.get(normalized_key, key)
+    
     @staticmethod
     def _is_quoted_string(value_str: str) -> bool:
         """Проверяет, является ли строка строкой в кавычках."""
@@ -188,18 +243,18 @@ class ObjectParser:
                 if i + 1 >= len(tokens):
                     raise ParseError(f'Непарный ключ-значение для ключа: {tokens[i]}')
                 
-                key = tokens[i]
+                key = ObjectParser._translate_key(tokens[i])
                 value_str = tokens[i + 1]
                 
                 if key in properties:
-                    raise ParseError(f'Дублирующееся свойство: {key}')
+                    raise ParseError(f'Дублирующееся свойство: {tokens[i]} (переведено как: {key})')
                 
                 properties[key] = ObjectParser.parse_value(value_str)
             
             # Проверка обязательных свойств для известных типов объектов
             required_properties = {
                 'UserProfile': {
-                    'пол': str,
+                    'gender': str,
                     'age': int,
                     'height': float,
                     'weight': float,

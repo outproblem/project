@@ -17,22 +17,31 @@ def demonstrate_correct_cases() -> None:
     
     correct_examples = [
         (
-            'UserProfile пол "мужской" age 25 height 180.5 weight 75.0 '
-            'goal "похудение" activity_type "средняя"',
-            'Профиль пользователя (корректный)',
+            'UserProfile пол "мужской" возраст 25 рост 180.5 вес 75.0 '
+            'цель "похудение" активность "средняя"',
+            'Профиль пользователя (корректный, русские ключи)',
         ),
         (
-            'Exercise name "Приседания" sets 4 reps_per_set 10 weight 60.0',
-            'Упражнение (корректное)',
+            'Exercise название "Приседания" подходы 4 повторения 10 вес 60.0',
+            'Упражнение (корректное, русские ключи)',
         ),
         (
-            'Workout date 2025.12.15 duration 01:30',
-            'Тренировка (корректная)',
+            'Workout дата 2025.12.15 длительность 01:30',
+            'Тренировка (корректная, русские ключи)',
         ),
         (
-            'NutritionGoal goal_type "похудение" calories 1800.0 protein 120.0 '
-            'fat 50.0 carbs 180.0',
-            'Цель питания (корректная)',
+            'NutritionGoal тип_цели "похудение" калории 1800.0 белок 120.0 '
+            'жиры 50.0 углеводы 180.0',
+            'Цель питания (корректная, русские ключи)',
+        ),
+        (
+            'UserProfile gender "женский" age 30 height 165.0 weight 60.0 '
+            'goal "поддержание формы" activity_type "высокая"',
+            'Профиль пользователя (корректный, английские ключи)',
+        ),
+        (
+            'Exercise name "Жим лежа" sets 3 reps_per_set 10 weight 80.0',
+            'Упражнение (корректное, английские ключи)',
         ),
     ]
     
@@ -72,16 +81,16 @@ def demonstrate_error_cases() -> None:
             'Неполная строка (непарные ключ-значение)',
         ),
         (
-            'UserProfile пол "мужской" age "двадцать пять"',
+            'UserProfile пол "мужской" возраст "двадцать пять"',
             'Некорректный тип значения (строка вместо числа)',
         ),
         (
-            'UserProfile пол "мужской" age 25 пол "женский"',
+            'UserProfile пол "мужской" возраст 25 пол "женский"',
             'Дублирующиеся свойства',
         ),
         (
-            'UserProfile пол "мужской" age 150 height 180.5 weight 75.0 '
-            'goal "похудение" activity_type "средняя"',
+            'UserProfile пол "мужской" возраст 150 рост 180.5 вес 75.0 '
+            'цель "похудение" активность "средняя"',
             'Некорректные данные (возраст 150 лет)',
         ),
         (
@@ -89,15 +98,15 @@ def demonstrate_error_cases() -> None:
             'Неизвестный тип объекта',
         ),
         (
-            'UserProfile пол мужской age 25',
+            'UserProfile пол мужской возраст 25',
             'Строка без кавычек',
         ),
         (
-            'UserProfile пол "мужской" age 25 height "сто восемьдесят"',
+            'UserProfile пол "мужской" возраст 25 рост "сто восемьдесят"',
             'Некорректный тип (строка вместо числа)',
         ),
         (
-            'Workout date 2025.13.45 duration 25:61',
+            'Workout дата 2025.13.45 длительность 25:61',
             'Некорректная дата и время',
         ),
     ]
@@ -123,17 +132,17 @@ def demonstrate_object_methods() -> None:
     # Создаем тестовые объекты
     test_cases = [
         (
-            'UserProfile пол "мужской" age 25 height 180.5 weight 75.0 '
-            'goal "похудение" activity_type "средняя"',
+            'UserProfile пол "мужской" возраст 25 рост 180.5 вес 75.0 '
+            'цель "похудение" активность "средняя"',
             'UserProfile',
         ),
         (
-            'Exercise name "Жим лежа" sets 3 reps_per_set 10 weight 80.0',
+            'Exercise название "Жим лежа" подходы 3 повторения 10 вес 80.0',
             'Exercise',
         ),
         (
-            'NutritionGoal goal_type "похудение" calories 1800.0 protein 120.0 '
-            'fat 50.0 carbs 180.0',
+            'NutritionGoal тип_цели "похудение" калории 1800.0 белок 120.0 '
+            'жиры 50.0 углеводы 180.0',
             'NutritionGoal',
         ),
     ]
@@ -144,15 +153,15 @@ def demonstrate_object_methods() -> None:
             print(f'\n{type(obj).__name__}:')
             
             # Демонстрация методов в зависимости от типа
-            if isinstance(obj, type.__getattr__('UserProfile')):
+            if hasattr(obj, 'calculate_bmi'):
                 print(f'  • BMI: {obj.calculate_bmi():.1f}')
                 print(f'  • Категория BMI: {obj.get_bmi_category()}')
                 
-            elif isinstance(obj, type.__getattr__('Exercise')):
+            elif hasattr(obj, 'calculate_volume'):
                 print(f'  • Объем: {obj.calculate_volume():.1f}')
                 print(f'  • Строковое представление: {obj}')
                 
-            elif isinstance(obj, type.__getattr__('NutritionGoal')):
+            elif hasattr(obj, 'calculate_protein_calories'):
                 print(f'  • Калории из белка: {obj.calculate_protein_calories():.1f}')
                 print(f'  • Калории из жиров: {obj.calculate_fat_calories():.1f}')
                 print(f'  • Калории из углеводов: {obj.calculate_carbs_calories():.1f}')
